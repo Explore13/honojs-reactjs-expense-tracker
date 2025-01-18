@@ -26,6 +26,17 @@ const expenseRoute = new Hono()
       console.error(error);
       return c.json({ error: "Failed to add expense" }, 500);
     }
+  })
+  .get("/:id{[0-9]+}", (c) => {
+    const id = Number.parseInt(c.req.param("id")); // By default path params are String
+    const expense = fakeExpenses.find((expense) => expense.id === id);
+    console.log(expense);
+
+    if (!expense) return c.notFound();
+
+    return c.json({
+      expense,
+    });
   });
 
 export default expenseRoute;
