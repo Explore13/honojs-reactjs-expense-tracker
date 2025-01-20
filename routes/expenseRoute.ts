@@ -18,10 +18,13 @@ const expenseRoute = new Hono()
       fakeExpenses.push(newExpense);
       console.log(fakeExpenses);
 
-      return c.json({
-        message: "Expense added successfully",
-        expense: newExpense,
-      });
+      return c.json(
+        {
+          message: "Expense added successfully",
+          expense: newExpense,
+        },
+        201
+      );
     } catch (error) {
       console.error(error);
       return c.json({ error: "Failed to add expense" }, 500);
@@ -37,6 +40,22 @@ const expenseRoute = new Hono()
     return c.json({
       expense,
     });
+  })
+  .delete("/:id{[0-9]+}", (c) => {
+    try {
+      const id = Number.parseInt(c.req.param("id"));
+      const index = fakeExpenses.findIndex((expense) => expense.id === id);
+      if (index === -1) return c.notFound();
+      const deletedExpense = fakeExpenses.splice(index, 1)[0];
+      console.log(fakeExpenses);
+      return c.json({
+        message: "Expense deleted successfully",
+        expense: deletedExpense,
+      });
+    } catch (error) {
+      console.error(error);
+      return c.json({ error: "Failed to delete expense" }, 500);
+    }
   });
 
 export default expenseRoute;
