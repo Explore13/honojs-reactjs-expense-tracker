@@ -1,12 +1,10 @@
 import { z } from "zod";
 
-export const expenseSchema = z.object({
+const expenseSchemawithId = z.object({
+  id: z.number().positive().min(1),
   title: z.string().min(3).max(100),
   amount: z.number().int().positive(),
 });
+export const expenseSchema = expenseSchemawithId.omit({ id: true });
 
-export type Expense = {
-  id: number;
-  title: string;
-  amount: number;
-};
+export type Expense = z.infer<typeof expenseSchemawithId>;
