@@ -4,6 +4,29 @@ import { expenseSchema, type Expense } from "../schemas/expenseSchema";
 import { fakeExpenses } from "../utils/fakeExpenses";
 
 const expenseRoute = new Hono()
+  .get("/total-expenses", (c) => {
+    try {
+      // let totalExpenses = 0;
+      // fakeExpenses.forEach((e) => (totalExpenses = totalExpenses + e.amount));
+
+      const totalExpenses = fakeExpenses.reduce(
+        (acc, expense) => acc + expense.amount,
+        0
+      );
+      return c.json({
+        totalExpenses: totalExpenses,
+        expenses: fakeExpenses,
+        message: "Total Expenses fetched successfully",
+      });
+    } catch (error) {
+      return c.json(
+        {
+          message: { error },
+        },
+        404
+      );
+    }
+  })
   .get("/", (c: Context) => {
     return c.json({
       message: "Expenses fetched successfully",
