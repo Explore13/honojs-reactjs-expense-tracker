@@ -13,9 +13,19 @@ This ensures `/api/expense` and `/api/expense/` are treated as the same route.
 // app.use('/api/*', cors()) // added proxy in frontend
 
 app.use("*", logger());
-app.route("/api/expense", expenseRoute);    
+const apiRoutes = app.basePath("/api").route("/expense", expenseRoute);
 
-app.use("*", serveStatic({ root: "./frontend/dist" }));
-app.get("*", serveStatic({ path: "./frontend/dist/index.html" }));
+// app.use("*", serveStatic({ root: "../frontend/dist" }));
+app.use(
+  "*",
+  serveStatic({
+    root: "../frontend/dist",
+    onNotFound: (path, c) => {
+      console.log(`${path} is not found, you access ${c.req.path}`);
+    },
+  })
+);
+app.get("*", serveStatic({ path: "../frontend/dist/index.html" }));
 
 export default app;
+export type ApiRoutes = typeof apiRoutes;
