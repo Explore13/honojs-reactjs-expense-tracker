@@ -13,7 +13,7 @@ This ensures `/api/expense` and `/api/expense/` are treated as the same route.
 // app.use('/api/*', cors()) // added proxy in frontend
 
 app.use("*", logger());
-const apiRoutes = app.basePath("/api").route("/expense", expenseRoute);
+const apiRoutes = app.basePath("/api").route("/expenses", expenseRoute);
 
 // app.use("*", serveStatic({ root: "../frontend/dist" }));
 app.use(
