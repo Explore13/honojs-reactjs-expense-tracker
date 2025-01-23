@@ -19,6 +19,7 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -61,13 +62,21 @@ function Index() {
             <div className="w-full h-[80px] border flex items-center gap-3 mt-5 justify-center rounded-sm">
               <span className=" font-semibold text-lg">Today's Spent :</span>
               <p className="text-white">
-                {isPending ? "..." : "Rs. " + data.totalExpenses + "/-"}
+                {isPending ? (
+                  <Skeleton className="h-4 w-14" />
+                ) : (
+                  "Rs. " + data.totalExpenses + "/-"
+                )}
               </p>
             </div>
             <div className="w-full h-[80px] border flex items-center gap-3 mt-3 justify-center rounded-sm">
               <span className="font-semibold text-lg">Overall Spent :</span>
               <p className="text-white">
-                {isPending ? "..." : "Rs. " + data.totalExpenses + "/-"}
+                {isPending ? (
+                  <Skeleton className="h-4 w-14" />
+                ) : (
+                  "Rs. " + data.totalExpenses + "/-"
+                )}
               </p>
             </div>
             <Button className="max-w-50">Add Expense</Button>
@@ -83,28 +92,34 @@ function Index() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
-                  <TableHead>Amount</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isPending
                   ? Array.from({ length: 3 }).map((_, index) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">...</TableCell>
-                        <TableCell>...</TableCell>
+                        <TableCell className="font-medium">
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-4" />
+                        </TableCell>
                       </TableRow>
                     ))
                   : data?.expenses
                       ?.slice(-3)
                       .reverse()
-                      .map((expense) => (
-                        <TableRow key={expense.id}>
+                      .map((expense, index) => (
+                        <TableRow key={index}>
                           <TableCell className="text-gray-50">
                             {expense.title.length > 15
                               ? expense.title.substring(0, 20) + "..."
                               : expense.title}
                           </TableCell>
-                          <TableCell>{expense.amount}</TableCell>
+                          <TableCell className="text-right">
+                            {expense.amount}
+                          </TableCell>
                         </TableRow>
                       ))}
               </TableBody>

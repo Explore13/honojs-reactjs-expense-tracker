@@ -10,12 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/expenses")({
   component: Expenses,
 });
 
 async function getAllExpenses() {
+  await new Promise((r) => setTimeout(r, 3000)); // Hard-coded loading to display the skeleton loader
   const res = await api.expenses.$get();
   if (!res.ok) throw new Error("Server Error");
   const data = await res.json();
@@ -43,14 +45,33 @@ export function Expenses() {
         </TableHeader>
         <TableBody>
           {isPending
-            ? "..."
-            : data?.expenses?.slice().reverse().map((expense) => (
-                <TableRow key={expense.id}>
-                  <TableCell className="font-medium">{expense.id}</TableCell>
-                  <TableCell className="text-center">{expense.title}</TableCell>
-                  <TableCell className="text-right">{expense.amount}</TableCell>
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-4" />
+                  </TableCell>
                 </TableRow>
-              ))}
+              ))
+            : data?.expenses
+                ?.slice()
+                .reverse()
+                .map((expense) => (
+                  <TableRow key={expense.id}>
+                    <TableCell className="font-medium">{expense.id}</TableCell>
+                    <TableCell className="text-center">
+                      {expense.title}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {expense.amount}
+                    </TableCell>
+                  </TableRow>
+                ))}
         </TableBody>
       </Table>
     </div>
