@@ -17,7 +17,7 @@ export const Route = createFileRoute("/expenses")({
 });
 
 async function getAllExpenses() {
-  await new Promise((r) => setTimeout(r, 3000)); // Hard-coded loading to display the skeleton loader
+  await new Promise((r) => setTimeout(r, 2000)); // Hard-coded loading to display the skeleton loader
   const res = await api.expenses.$get();
   if (!res.ok) throw new Error("Server Error");
   const data = await res.json();

@@ -61,23 +61,23 @@ function Index() {
           <CardDescription className="flex flex-col gap-5 h-full items-between">
             <div className="w-full h-[80px] border flex items-center gap-3 mt-5 justify-center rounded-sm">
               <span className=" font-semibold text-lg">Today's Spent :</span>
-              <p className="text-white">
+              <div className="text-white">
                 {isPending ? (
                   <Skeleton className="h-4 w-14" />
                 ) : (
                   "Rs. " + data.totalExpenses + "/-"
                 )}
-              </p>
+              </div>
             </div>
             <div className="w-full h-[80px] border flex items-center gap-3 mt-3 justify-center rounded-sm">
               <span className="font-semibold text-lg">Overall Spent :</span>
-              <p className="text-white">
+              <div className="text-white">
                 {isPending ? (
                   <Skeleton className="h-4 w-14" />
                 ) : (
                   "Rs. " + data.totalExpenses + "/-"
                 )}
-              </p>
+              </div>
             </div>
             <Button className="max-w-50">Add Expense</Button>
           </CardDescription>
