@@ -4,12 +4,12 @@ import { expenseSchema, type Expense } from "../schemas/expenseSchema";
 import { fakeExpenses } from "../utils/fakeExpenses";
 
 const expenseRoute = new Hono()
-  .get("/total-expenses", async(c) => {
+  .get("/total-expenses", async (c) => {
     try {
       // let totalExpenses = 0;
       // fakeExpenses.forEach((e) => (totalExpenses = totalExpenses + e.amount));
 
-      await new Promise((r)=>setTimeout(r,2000)) // Hard-coded loading to display the skeleton loader
+      await new Promise((r) => setTimeout(r, 2000)); // Hard-coded loading to display the skeleton loader
       const totalExpenses = fakeExpenses.reduce(
         (acc, expense) => acc + expense.amount,
         0
