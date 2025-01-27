@@ -34,7 +34,6 @@ async function getTotalExpenses() {
   // setTotalSpent(data.totalExpenses);
   // setExpenses(data.expenses);
 }
-
 function Index() {
   const { isPending, error, data } = useQuery({
     queryKey: ["total-spent"],
