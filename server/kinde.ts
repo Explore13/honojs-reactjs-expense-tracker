@@ -3,22 +3,21 @@ import {
   GrantType,
   type SessionManager,
 } from "@kinde-oss/kinde-typescript-sdk";
-import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import type { Context } from "hono";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+import { config } from "./config/config";
 
 // Client for authorization code flow
 export const kindeClient = createKindeServerClient(
   GrantType.AUTHORIZATION_CODE,
   {
-    authDomain: process.env.KINDE_DOMAIN!,
-    clientId: process.env.KINDE_CLIENT_ID!,
-    clientSecret: process.env.KINDE_CLIENT_SECRET!,
-    redirectURL: "http://localhost:5173/api/callback",
-    logoutRedirectURL: "http://localhost:5173",
+    authDomain: config.KINDE_DOMAIN,
+    clientId: config.KINDE_CLIENT_ID,
+    clientSecret: config.KINDE_CLIENT_SECRET,
+    redirectURL: config.KINDE_LOGOUT_REDIRECT_URI,
+    logoutRedirectURL: config.KINDE_LOGOUT_REDIRECT_URI,
   }
 );
-
-let store: Record<string, unknown> = {};
 
 export const sessionManager = (c: Context): SessionManager => ({
   async getSessionItem(key: string) {
@@ -26,9 +25,11 @@ export const sessionManager = (c: Context): SessionManager => ({
     return result;
   },
   async setSessionItem(key: string, value: unknown) {
+    const isDev = config.NODE_ENV !== "production";
+
     const cookieOptions = {
       httpOnly: true,
-      secure: true,
+      secure: !isDev,
       sameSite: "Lax",
     } as const;
     if (typeof value === "string") {

@@ -16,20 +16,30 @@ const authRoute = new Hono()
   })
   .get("/callback", async (c) => {
     // get called every time we login or register
-    const url = new URL(c.req.url);
-    await kindeClient.handleRedirectToApp(sessionManager(c), url);
-    return c.redirect("/");
+    try {
+      const url = new URL(c.req.url);
+      console.log(url);
+      
+      const res = await kindeClient.handleRedirectToApp(sessionManager(c), url);
+      console.log(res);
+      
+      return c.redirect("/");
+    } catch (error) {
+      console.log(error);
+      return c.json({
+        error: "An error occurred during the callback process.",
+      });
+    }
   })
   .get("/me", async (c) => {
     const isAuthenticated = await kindeClient.isAuthenticated(
       sessionManager(c)
     );
-    return c.json({ isAuthenticated });
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       // Need to implement, e.g: call an api, etc...
-    } else {
-      // Need to implement, e.g: redirect user to sign in, etc..
+      return c.json({ error: "Unauthorized" }, 401);
     }
+    const user = await kindeClient.getUserProfile(sessionManager(c));
+    return c.json({ user });
   });
-
 export default authRoute;
