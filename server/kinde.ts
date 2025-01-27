@@ -10,11 +10,11 @@ import type { Context } from "hono";
 export const kindeClient = createKindeServerClient(
   GrantType.AUTHORIZATION_CODE,
   {
-    authDomain: process.env.KINDE_ISSUER_URL!,
+    authDomain: process.env.KINDE_DOMAIN!,
     clientId: process.env.KINDE_CLIENT_ID!,
     clientSecret: process.env.KINDE_CLIENT_SECRET!,
-    redirectURL: process.env.KINDE_SITE_URL!,
-    logoutRedirectURL: process.env.KINDE_LOGOUT_REDIRECT_URI!,
+    redirectURL: "http://localhost:5173/api/callback",
+    logoutRedirectURL: "http://localhost:5173",
   }
 );
 
