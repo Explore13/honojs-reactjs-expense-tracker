@@ -14,7 +14,7 @@ export const kindeClient = createKindeServerClient(
     authDomain: config.KINDE_DOMAIN,
     clientId: config.KINDE_CLIENT_ID,
     clientSecret: config.KINDE_CLIENT_SECRET,
-    redirectURL: config.KINDE_LOGOUT_REDIRECT_URI,
+    redirectURL: config.KINDE_REDIRECT_URI,
     logoutRedirectURL: config.KINDE_LOGOUT_REDIRECT_URI,
   }
 );
@@ -26,6 +26,7 @@ export const sessionManager = (c: Context): SessionManager => ({
   },
   async setSessionItem(key: string, value: unknown) {
     const isDev = config.NODE_ENV !== "production";
+    console.log(`Setting cookie: ${key} = ${value}`);
 
     const cookieOptions = {
       httpOnly: true,
