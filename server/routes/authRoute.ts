@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { kindeClient, sessionManager } from "../kinde";
+import { getUser, kindeClient, sessionManager } from "../kinde";
 
 const authRoute = new Hono()
   .get("/login", async (c) => {
@@ -42,16 +42,10 @@ const authRoute = new Hono()
       );
     }
   })
-  .get("/me", async (c) => {
+  .get("/me", getUser, async (c) => {
     try {
-      const isAuthenticated = await kindeClient.isAuthenticated(
-        sessionManager(c)
-      );
-      if (!isAuthenticated) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
-
-      const user = await kindeClient.getUserProfile(sessionManager(c));
+      const user = c.var.user;
+      if (!user) return c.json({ error: "Unauthorized" }, 401);
       return c.json({ user });
     } catch (error) {
       console.error("Error fetching user profile:", error);
