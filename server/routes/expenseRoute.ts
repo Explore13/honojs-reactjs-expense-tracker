@@ -2,13 +2,14 @@ import { Hono, type Context } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { expenseSchema, type Expense } from "../schemas/expenseSchema";
 import { fakeExpenses } from "../utils/fakeExpenses";
+import { getUser } from "../kinde";
 
 const expenseRoute = new Hono()
-  .get("/total-expenses", async (c) => {
+  .get("/total-expenses", getUser, async (c) => {
     try {
       // let totalExpenses = 0;
       // fakeExpenses.forEach((e) => (totalExpenses = totalExpenses + e.amount));
-
+      const user = c.var.user;
       await new Promise((r) => setTimeout(r, 2000)); // Hard-coded loading to display the skeleton loader
       const totalExpenses = fakeExpenses.reduce(
         (acc, expense) => acc + expense.amount,
@@ -28,14 +29,16 @@ const expenseRoute = new Hono()
       );
     }
   })
-  .get("/", (c: Context) => {
+  .get("/", getUser, (c: Context) => {
+    const user = c.var.user;
     return c.json({
       message: "Expenses fetched successfully",
       expenses: fakeExpenses,
     });
   })
-  .post("/", zValidator("json", expenseSchema), async (c: Context) => {
+  .post("/", getUser, zValidator("json", expenseSchema), async (c: Context) => {
     try {
+      const user = c.var.user;
       const expense = await c.req.valid("json");
       console.log(expense);
       const newExpense = { id: fakeExpenses.length + 1, ...expense };
@@ -54,7 +57,8 @@ const expenseRoute = new Hono()
       return c.json({ error: "Failed to add expense" }, 500);
     }
   })
-  .get("/:id{[0-9]+}", (c) => {
+  .get("/:id{[0-9]+}", getUser, (c) => {
+    const user = c.var.user;
     const id = Number.parseInt(c.req.param("id")); // By default path params are String
     const expense = fakeExpenses.find((expense) => expense.id === id);
     console.log(expense);
@@ -65,8 +69,9 @@ const expenseRoute = new Hono()
       expense,
     });
   })
-  .delete("/:id{[0-9]+}", (c) => {
+  .delete("/:id{[0-9]+}", getUser, (c) => {
     try {
+      const user = c.var.user;
       const id = Number.parseInt(c.req.param("id"));
       const index = fakeExpenses.findIndex((expense) => expense.id === id);
       if (index === -1) return c.notFound();
