@@ -13,8 +13,8 @@ function About() {
   if (isPending) return "loading...";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <div className="p-6 rounded-lg border-2 shadow-md w-full max-w-md">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="p-6 rounded-lg border shadow-md w-full max-w-md">
         <div className="w-full flex justify-center">
           <img
             src={data?.user?.picture || "/src/assets/user_profile.png"}
