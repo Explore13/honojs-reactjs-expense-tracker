@@ -29,6 +29,7 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context }) => {
     try {
       const queryClient = context.queryClient;
+      // const data = await queryClient.fetchQuery(userQueryOptions);
       const data = await queryClient.fetchQuery(userQueryOptions);
       return data;
     } catch (error) {

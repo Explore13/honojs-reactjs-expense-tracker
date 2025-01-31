@@ -1,12 +1,12 @@
-import { Button } from '@/components/ui/button'
-import { api } from '@/lib/api'
+import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
 
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card";
 
 import {
   Table,
@@ -15,31 +15,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
 
-import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Skeleton } from '@/components/ui/skeleton'
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const Route = createFileRoute('/_authenticated/')({
+export const Route = createFileRoute("/_authenticated/")({
   component: Index,
-})
+});
 
 async function getTotalExpenses() {
-  const res = await api.expenses['total-expenses'].$get()
-  if (!res.ok) throw new Error('Server Error')
-  const data = await res.json()
-  console.log(data)
-  return data
+  const res = await api.expenses["total-expenses"].$get();
+  if (!res.ok) throw new Error("Server Error");
+  const data = await res.json();
+  console.log(data);
+  return data;
 }
 
 function Index() {
   const { isPending, error, data } = useQuery({
-    queryKey: ['total-spent'],
+    queryKey: ["total-spent"],
     queryFn: getTotalExpenses,
-  })
+  });
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <div className="md:mt-0 mt-10">
@@ -54,7 +54,7 @@ function Index() {
                   {isPending ? (
                     <Skeleton className="h-4 w-14" />
                   ) : (
-                    'Rs. ' + data.totalExpenses + '/-'
+                    "Rs. " + data.todaysExpenses + "/-"
                   )}
                 </div>
               </div>
@@ -64,11 +64,13 @@ function Index() {
                   {isPending ? (
                     <Skeleton className="h-4 w-14" />
                   ) : (
-                    'Rs. ' + data.totalExpenses + '/-'
+                    "Rs. " + data.totalExpenses + "/-"
                   )}
                 </div>
               </div>
-              <Button className="max-w-50">Add Expense</Button>
+              <Link to="/create-expense">
+                <Button className="w-full">Add Expense</Button>
+              </Link>
             </CardDescription>
           </CardHeader>
         </Card>
@@ -96,21 +98,18 @@ function Index() {
                           </TableCell>
                         </TableRow>
                       ))
-                    : data?.expenses
-                        ?.slice(-3)
-                        .reverse()
-                        .map((expense, index) => (
-                          <TableRow key={index}>
-                            <TableCell className="text-gray-50">
-                              {expense.title.length > 15
-                                ? expense.title.substring(0, 20) + '...'
-                                : expense.title}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {expense.amount}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                    : data?.expenses.map((expense, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="text-gray-50">
+                            {expense.title.length > 15
+                              ? expense.title.substring(0, 20) + "..."
+                              : expense.title}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {expense.amount}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                 </TableBody>
               </Table>
               <Link to="/expenses">
@@ -121,5 +120,5 @@ function Index() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

@@ -13,7 +13,7 @@ function CreateExpense() {
   const form = useForm({
     defaultValues: {
       title: "",
-      amount: 0,
+      amount: "0",
     },
     onSubmit: async ({ value }) => {
       await new Promise((r) => setTimeout(r, 3000));
@@ -84,7 +84,7 @@ function CreateExpense() {
               name="amount"
               validators={{
                 onChange: ({ value }) =>
-                  value <= 0
+                  value <= "0"
                     ? "Amount can not be negative or zero."
                     : undefined,
                 onChangeAsyncDebounceMs: 500,
@@ -101,7 +101,7 @@ function CreateExpense() {
                     id={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="Title"
                   />
                   {field.state.meta.isTouched &&

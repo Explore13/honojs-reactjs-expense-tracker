@@ -1,6 +1,6 @@
-import { api } from '@/lib/api'
-import { useQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   Table,
   TableBody,
@@ -9,29 +9,29 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Skeleton } from '@/components/ui/skeleton'
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const Route = createFileRoute('/_authenticated/expenses')({
+export const Route = createFileRoute("/_authenticated/expenses")({
   component: Expenses,
-})
+});
 
 async function getAllExpenses() {
-  await new Promise((r) => setTimeout(r, 2000)) // Hard-coded loading to display the skeleton loader
-  const res = await api.expenses.$get()
-  if (!res.ok) throw new Error('Server Error')
-  const data = await res.json()
-  console.log(data)
-  return data
+  await new Promise((r) => setTimeout(r, 2000)); // Hard-coded loading to display the skeleton loader
+  const res = await api.expenses.$get();
+  if (!res.ok) throw new Error("Server Error");
+  const data = await res.json();
+  console.log(data);
+  return data;
 }
 
 export function Expenses() {
   const { isPending, error, data } = useQuery({
-    queryKey: ['get-all-expenses'],
+    queryKey: ["get-all-expenses"],
     queryFn: getAllExpenses,
-  })
+  });
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error) return "An error has occurred: " + error.message;
   return (
     <div className="p-2 max-w-3xl m-auto">
       <Table>
@@ -58,22 +58,15 @@ export function Expenses() {
                   </TableCell>
                 </TableRow>
               ))
-            : data?.expenses
-                ?.slice()
-                .reverse()
-                .map((expense) => (
-                  <TableRow key={expense.id}>
-                    <TableCell className="font-medium">{expense.id}</TableCell>
-                    <TableCell className="text-center">
-                      {expense.title}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {expense.amount}
-                    </TableCell>
-                  </TableRow>
-                ))}
+            : data?.expenses.map((expense) => (
+                <TableRow key={expense.id}>
+                  <TableCell className="font-medium">{expense.id}</TableCell>
+                  <TableCell className="text-center">{expense.title}</TableCell>
+                  <TableCell className="text-right">{expense.amount}</TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
