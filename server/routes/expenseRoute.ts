@@ -47,7 +47,7 @@ const expenseRoute = new Hono()
 
       return c.json({
         totalExpenses: totalExpenses.total,
-        todaysExpenses: todaysExpenses.total,
+        todaysExpenses: todaysExpenses.total || "0",
         expenses: expenses,
         message: "Total Expenses fetched successfully",
       });
