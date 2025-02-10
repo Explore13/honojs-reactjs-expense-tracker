@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "@tanstack/react-form";
 import { api } from "@/lib/api";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { expenseSchema } from "@/server/schemas/expenseSchema";
+// import { expenseSchema } from "@/server/schemas/expenseSchema"; // do not why it is producing error
+import { expenseSchema } from "../../../../server/schemas/expenseSchema";
+
+
+
+
 export const Route = createFileRoute("/_authenticated/create-expense")({
   component: CreateExpense,
 });
@@ -44,8 +49,7 @@ function CreateExpense() {
             <form.Field
               name="title"
               validators={{
-                onChange: () => expenseSchema.shape.title,
-                onChangeAsyncDebounceMs: 500,
+                onChange: (expenseSchema.shape.title)
               }}
               children={(field) => (
                 <>
@@ -65,17 +69,14 @@ function CreateExpense() {
                       {field.state.meta.errors.join(", ")}
                     </em>
                   ) : null}
-                  {field.state.meta.isValidating ? (
-                    <em className="text-yellow-400">Validating...</em>
-                  ) : null}
+                  
                 </>
               )}
             />
             <form.Field
               name="amount"
               validators={{
-                onChange: () => expenseSchema.shape.amount,
-                onChangeAsyncDebounceMs: 500,
+                onChange: (expenseSchema.shape.amount)
               }}
               children={(field) => (
                 <>
@@ -94,9 +95,7 @@ function CreateExpense() {
                       {field.state.meta.errors.join(", ")}
                     </em>
                   ) : null}
-                  {field.state.meta.isValidating ? (
-                    <em className="text-yellow-400">Validating...</em>
-                  ) : null}
+                
                 </>
               )}
             />
