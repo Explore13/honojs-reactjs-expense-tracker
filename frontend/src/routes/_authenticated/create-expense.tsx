@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "@tanstack/react-form";
 import { api } from "@/lib/api";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-
+import { expenseSchema } from "@/server/schemas/expenseSchema";
 export const Route = createFileRoute("/_authenticated/create-expense")({
   component: CreateExpense,
 });
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/create-expense")({
 function CreateExpense() {
   const navigate = useNavigate();
   const form = useForm({
-    validatorAdapter: zodValidator,
+    validatorAdapter: zodValidator(),
     defaultValues: {
       title: "",
       amount: "0",
@@ -44,19 +44,8 @@ function CreateExpense() {
             <form.Field
               name="title"
               validators={{
-                onChange: ({ value }) =>
-                  !value
-                    ? "A title is required"
-                    : value.length < 3
-                      ? "Title must be at least 3 characters"
-                      : undefined,
+                onChange: () => expenseSchema.shape.title,
                 onChangeAsyncDebounceMs: 500,
-                onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return (
-                    value.includes("error") && 'No "error" allowed in title'
-                  );
-                },
               }}
               children={(field) => (
                 <>
@@ -85,15 +74,8 @@ function CreateExpense() {
             <form.Field
               name="amount"
               validators={{
-                onChange: ({ value }) =>
-                  value <= "0"
-                    ? "Amount can not be negative or zero."
-                    : undefined,
+                onChange: () => expenseSchema.shape.amount,
                 onChangeAsyncDebounceMs: 500,
-                onChangeAsync: async () => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                  return undefined;
-                },
               }}
               children={(field) => (
                 <>
